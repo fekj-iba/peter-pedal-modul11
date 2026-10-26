@@ -55,8 +55,7 @@ kunde må kun læse sine egne sager. Konstanterne ligger i `Auth/Scopes.cs`.
 
 `Controllers/AuthController.cs`, `POST /api/auth/login`:
 
-1. Fyld `ScopesByRole` ud: hvilke scopes skal FrontDesk, Mechanic, Owner og Customer have? Giv hver rolle
-   **kun** det, den har brug for. Ejeren skal kunne alt.
+1. Fyld `ScopesByRole` ud: hvilke scopes skal FrontDesk, Mechanic, Owner og Customer have? 
 2. Find brugeren i `_db.Users`, og tjek adgangskoden med `PasswordHasher.Verify`. Forkert brugernavn og
    forkert adgangskode skal give **samme** svar: `401` med titlen "Forkert brugernavn eller adgangskode."
    (`Problem(title: ..., statusCode: StatusCodes.Status401Unauthorized)`).
