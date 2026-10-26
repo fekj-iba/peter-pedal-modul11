@@ -1,20 +1,18 @@
 # Peter Pedal – Modul 11: API-sikkerhed
 
-I dag sikrer du Peter Pedals API fra modul 9. Du arbejder videre i **dit eget repository fra modul 9**. Dette
-repository indeholder kun opgaverne og de filer, du skal kopiere ind:
+Vi forsætter arbejdet med API i Peter Pedals Cykelbutik. I dag har vi fokus på API sikkerhed. i skal arbejde videre i **jeres eget repository fra modul 9**. Dette
+repository indeholder kun opgaverne og de filer, som skal kopieres ind:
 
 - `scaffolding/` – nye og ændrede filer (brugere, login-side, kundeside, scripts m.m.). Alle skal bruge dem.
 - `catch-up/` – løsningen på modul 9 (`SparePartsController.cs`, `Mutation.cs`, `reservedele.js`). Kun hvis du
   ikke blev færdig med modul 9.
-
-Al sikkerhedskoden skriver du selv – se `// TODO` i koden.
 
 ## Trin 0 – Kom i gang (5 min)
 
 1. Blev du ikke færdig med modul 9? Kopiér indholdet af `catch-up/` ind over roden af dit repository.
 2. Kopiér indholdet af `scaffolding/` ind over roden af dit repository. Den overskriver ingen af de filer, du
    skrev i modul 9.
-   - Mac/Linux: `cp -R scaffolding/. ../dit-repository/`
+   - Linux: `cp -R scaffolding/. ../dit-repository/`
    - Windows: åbn `scaffolding` i Stifinder, markér alt, og kopiér det ind i roden af dit repository.
 3. Stop API'et, og slet `Peter-pedal-backend/src/PeterPedal.Api/peterpedal.db`. Databasen bliver kun oprettet,
    når filen ikke findes, og der er nye tabeller og data.
