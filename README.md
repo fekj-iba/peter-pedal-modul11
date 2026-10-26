@@ -113,7 +113,7 @@ som `lise`: må hun se kunderne eller listen over alle sager?
 Network-fanen efter `Authorization`-headeren. Vent 2 minutter, og klik videre. Hvad sker der? Log ind som
 `lise`: du lander på `min-sag.html`. Skriv sagsnummer 2.
 
-## Opgave 4 – Autorisation på objektniveau (25 min)
+## Opgave 4 – Authroization på objektniveau (25 min)
 
 Lise må gerne spørge efter en sag med `repairCase(id: ...)` – men kun sin egen. Scopes kan ikke klare det:
 reglen afhænger af, *hvilken* sag hun spørger efter.
@@ -145,7 +145,7 @@ reglen afhænger af, *hvilken* sag hun spørger efter.
 
    Har du selv logget ind inden for det sidste minut, tæller de forsøg også med.
 
-## Opgave 6 – Logning (10 min)
+## Opgave 6 – Logging (10 min)
 
 Log med `ILogger` (`LogWarning`) – men **aldrig** adgangskoder eller tokens:
 
@@ -157,7 +157,7 @@ Log med `ILogger` (`LogWarning`) – men **aldrig** adgangskoder eller tokens:
 **Test:** Gentag testene fra opgave 2 og 4, og kig i API'ets konsol. Bemærk: `JwtBearerEvents` logger kun
 REST-kaldene. Når GraphQL afviser et kald (`AUTH_NOT_AUTHORIZED`), kommer der ingen 403-linje – hvorfor ikke?
 
-## Opgave 7 – Hvis du når det: API-nøgle mellem systemer
+## Opgave 7 – API-nøgle mellem systemer
 
 Leverandørens system skal kunne opdatere priser på reservedele – og intet andet. Det logger ikke ind; det
 sender en API-nøgle i headeren `X-Api-Key`.
