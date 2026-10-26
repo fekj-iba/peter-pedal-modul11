@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Min sag — Peter Pedal</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Peter Pedals Cykelværksted</h1>
+    <nav>
+      <a href="min-sag.html" aria-current="page">Min sag</a>
+      <a href="login.html">Log ind</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Min reparation</h2>
+    <p>Skriv sagsnummeret fra din kvittering.</p>
+    <p id="message" class="message" hidden></p>
+
+    <form id="case-form">
+      <label>Sagsnummer <input id="case-id" type="number" min="1"></label>
+      <div class="actions">
+        <button type="submit">Vis sag</button>
+      </div>
+    </form>
+
+    <section id="detail" hidden>
+      <h3>Sag <span id="detail-title"></span></h3>
+      <dl>
+        <dt>Kunde</dt><dd id="detail-customer"></dd>
+        <dt>Telefon</dt><dd id="detail-phone"></dd>
+        <dt>Problem</dt><dd id="detail-problem"></dd>
+        <dt>Status</dt><dd id="detail-status"></dd>
+        <dt>Pris</dt><dd id="detail-price"></dd>
+        <dt>Reservedele</dt><dd><ul id="detail-parts"></ul></dd>
+      </dl>
+    </section>
+  </main>
+
+  <script type="module" src="js/min-sag.js"></script>
+</body>
+</html>

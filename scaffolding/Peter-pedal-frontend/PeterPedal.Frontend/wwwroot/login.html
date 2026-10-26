@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log ind — Peter Pedal</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Peter Pedals Cykelværksted</h1>
+    <nav>
+      <a href="sager.html">Sager</a>
+      <a href="kunder.html">Kunder</a>
+      <a href="reservedele.html">Reservedele</a>
+      <a href="login.html" aria-current="page">Log ind</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Log ind</h2>
+    <p id="message" class="message" hidden></p>
+
+    <form id="login-form">
+      <label>Brugernavn <input id="username" autocomplete="username"></label>
+      <label>Adgangskode <input id="password" type="password" autocomplete="current-password"></label>
+      <div class="actions">
+        <button type="submit">Log ind</button>
+      </div>
+    </form>
+  </main>
+
+  <script type="module" src="js/login.js"></script>
+</body>
+</html>
