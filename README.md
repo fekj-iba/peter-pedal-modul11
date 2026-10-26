@@ -32,7 +32,7 @@ Medarbejderne logger ind – og nu kan kunderne også logge ind og følge deres 
 | `egon` | `egon123` | Customer (Egon, kunde 1) |
 | `lise` | `lise123` | Customer (Lise, kunde 2) |
 
-Egon har sag 1, og Lise har sag 2. Alle mekanikere må arbejde på alle sager.
+Egon har sag 1, og Lise har sag 2. 
 
 ### Scopes
 
