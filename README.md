@@ -7,7 +7,7 @@ repository indeholder kun opgaverne og de filer, som skal kopieres ind:
 - `catch-up/` – løsningen på modul 9 (`SparePartsController.cs`, `Mutation.cs`, `reservedele.js`). Kun hvis du
   ikke blev færdig med modul 9.
 
-## Trin 0 – Kom i gang (5 min)
+## Trin 0 – Kom i gang 
 Blev du ikke færdig med modul 9 skal du kopiére indholdet af `catch-up/` ind over roden af dit repository først. 
 
 1. Kopiér indholdet af `scaffolding/` ind over roden af dit repository. Den overskriver ingen af de filer, du
@@ -51,7 +51,7 @@ Et token indeholder de scopes, brugeren har. Hvert scope giver lov til bestemte 
 En kunde har ingen scopes. Kundens token siger i stedet, hvilken kunde det er (claim'en `customer_id`), og en
 kunde må kun læse sine egne sager. Konstanterne ligger i `Auth/Scopes.cs`.
 
-## Opgave 1 – Log ind (30 min)
+## Opgave 1 – Log ind 
 
 `Controllers/AuthController.cs`, `POST /api/auth/login`:
 
@@ -70,7 +70,7 @@ kunde må kun læse sine egne sager. Konstanterne ligger i `Auth/Scopes.cs`.
 og `exp`. Gør det samme for `lise` – hvad er anderledes? Prøv også en forkert adgangskode og et ukendt
 brugernavn.
 
-## Opgave 2 – Lås API'et (30 min)
+## Opgave 2 – Lås API'et 
 
 **Tjek tokenet** i `Program.cs` (se `// TODO`):
 
@@ -100,7 +100,7 @@ indsæt tokenet. Opret en kunde (201), og opret en reservedel (403). I GraphQL (
 sætter du headeren `Authorization: Bearer <token>`. Hvad står der i `errors`, når du ikke må? Log til sidst ind
 som `lise`: må hun se kunderne eller listen over alle sager?
 
-## Opgave 3 – Frontenden (20 min)
+## Opgave 3 – Frontenden
 
 1. `js/auth.js`: gem, hent og slet tokenet i `sessionStorage`.
 2. `js/login.js`: send brugernavn og adgangskode til `/api/auth/login` med `fetch`. Vis en fejl ved 401 og
@@ -113,7 +113,7 @@ som `lise`: må hun se kunderne eller listen over alle sager?
 Network-fanen efter `Authorization`-headeren. Vent 2 minutter, og klik videre. Hvad sker der? Log ind som
 `lise`: du lander på `min-sag.html`. Skriv sagsnummer 2.
 
-## Opgave 4 – Authroization på objektniveau (25 min)
+## Opgave 4 – Authroization på objektniveau 
 
 Lise må gerne spørge efter en sag med `repairCase(id: ...)` – men kun sin egen. Scopes kan ikke klare det:
 reglen afhænger af, *hvilken* sag hun spørger efter.
@@ -133,7 +133,7 @@ reglen afhænger af, *hvilken* sag hun spørger efter.
 3. Kør angrebet igen, og prøv `?id=1` i browseren igen. Hvorfor `null` og ikke en fejlbesked som "Det er ikke
    din sag"?
 
-## Opgave 5 – Rate limiting (10 min)
+## Opgave 5 – Rate limiting 
 
 1. `Program.cs`: `AddRateLimiter` med en fixed window-policy `"login"` pr. IP-adresse
    (`RateLimitPartition.GetFixedWindowLimiter`) med `RateLimiting:LoginPermitsPerMinute` forsøg pr. minut.
@@ -145,7 +145,7 @@ reglen afhænger af, *hvilken* sag hun spørger efter.
 
    Har du selv logget ind inden for det sidste minut, tæller de forsøg også med.
 
-## Opgave 6 – Logging (10 min)
+## Opgave 6 – Logging 
 
 Log med `ILogger` (`LogWarning`) – men **aldrig** adgangskoder eller tokens:
 
