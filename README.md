@@ -1,22 +1,22 @@
 # Peter Pedal – Modul 11: API-sikkerhed
 
-Vi forsætter arbejdet med API i Peter Pedals Cykelbutik. I dag har vi fokus på API sikkerhed. i skal arbejde videre i **jeres eget repository fra modul 9**. Dette
+Vi forsætter arbejdet med API i Peter Pedals Cykelbutik. I dag har vi fokus på API sikkerhed. I skal arbejde videre i **jeres eget repository fra modul 9**. Dette
 repository indeholder kun opgaverne og de filer, som skal kopieres ind:
 
-- `scaffolding/` – nye og ændrede filer (brugere, login-side, kundeside, scripts m.m.). Alle skal bruge dem.
+- `scaffolding/` – nye filer (brugere, login-side, kundeside, scripts m.m), som I skal indsætte i jeres repository
 - `catch-up/` – løsningen på modul 9 (`SparePartsController.cs`, `Mutation.cs`, `reservedele.js`). Kun hvis du
   ikke blev færdig med modul 9.
 
 ## Trin 0 – Kom i gang (5 min)
+Blev du ikke færdig med modul 9 skal du kopiére indholdet af `catch-up/` ind over roden af dit repository først. 
 
-1. Blev du ikke færdig med modul 9? Kopiér indholdet af `catch-up/` ind over roden af dit repository.
-2. Kopiér indholdet af `scaffolding/` ind over roden af dit repository. Den overskriver ingen af de filer, du
+1. Kopiér indholdet af `scaffolding/` ind over roden af dit repository. Den overskriver ingen af de filer, du
    skrev i modul 9.
    - Linux: `cp -R scaffolding/. ../dit-repository/`
    - Windows: åbn `scaffolding` i Stifinder, markér alt, og kopiér det ind i roden af dit repository.
-3. Stop API'et, og slet `Peter-pedal-backend/src/PeterPedal.Api/peterpedal.db`. Databasen bliver kun oprettet,
+2. Stop API'et, og slet `Peter-pedal-backend/src/PeterPedal.Api/peterpedal.db`. Databasen bliver kun oprettet,
    når filen ikke findes, og der er nye tabeller og data.
-4. Start API'et og frontenden som i modul 9. I Swagger (http://localhost:5080/swagger) kan du nu se
+3. Start API'et og frontenden som i modul 9. I Swagger (http://localhost:5080/swagger) kan du nu se
    `POST /api/auth/login` og en **Authorize**-knap.
 
 ### Brugere
