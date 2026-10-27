@@ -14,11 +14,8 @@ switch (args.FirstOrDefault())
     case "guess":
         await Guess();
         return 0;
-    case "supplier":
-        await Supplier(args.ElementAtOrDefault(1));
-        return 0;
     default:
-        Console.WriteLine("Brug: dotnet run --project scripts/PeterPedal.Scripts -- attack | guess | supplier [api-nøgle]");
+        Console.WriteLine("Brug: dotnet run --project scripts/PeterPedal.Scripts -- attack | guess");
         return 1;
 }
 
@@ -50,23 +47,6 @@ async Task Guess()
         var response = await http.PostAsJsonAsync("/api/auth/login", new { username = "peter", password = guesses[i] });
         Console.WriteLine($"{i + 1,2}. {guesses[i],-12} -> {(int)response.StatusCode} {response.StatusCode}");
     }
-}
-
-// The supplier's system sets the price of spare part 1 (Gear cable) to 175 kr.
-async Task Supplier(string? apiKey)
-{
-    var request = new HttpRequestMessage(HttpMethod.Put, "/api/supplier/spareparts/1/price")
-    {
-        Content = JsonContent.Create(new { price = 175.0m })
-    };
-    if (apiKey is not null)
-    {
-        request.Headers.Add("X-Api-Key", apiKey);
-    }
-    var response = await http.SendAsync(request);
-
-    Console.WriteLine(apiKey is null ? "Leverandøren kalder uden API-nøgle:" : $"Leverandøren kalder med API-nøglen '{apiKey}':");
-    Console.WriteLine($"{(int)response.StatusCode} {response.StatusCode}");
 }
 
 async Task<string> Login(string username, string password)

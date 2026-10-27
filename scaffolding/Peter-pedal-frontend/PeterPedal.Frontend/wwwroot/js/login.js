@@ -14,7 +14,14 @@ function showError(text) {
 
 // Uses fetch directly, not rest.js: here a 401 means "wrong password", not "go to the login page".
 async function login(username, password) {
-  // TODO: POST { username, password } as JSON to /api/auth/login. On 429 and 401 show an error with showError. Otherwise save the token with saveToken. A customer (the token has the claim customer_id, see readClaims) goes to min-sag.html, an employee to sager.html.
+  // TODO: Task 3: log in with the API from task 1.
+  // 1. POST { username, password } as JSON with fetch to `${API_BASE_URL}/api/auth/login`
+  //    (method, a Content-Type header and body: JSON.stringify(...)).
+  // 2. If it failed (look at response.status), show an error with showError and stop. Remember the
+  //    status code for "too many attempts" from task 5.
+  // 3. Otherwise read { token } from await response.json(), and save it with saveToken.
+  // 4. readClaims(token).customer_id tells you whether it is a customer: go to min-sag.html,
+  //    otherwise to sager.html (window.location.href).
 }
 
 form.addEventListener('submit', (event) => {

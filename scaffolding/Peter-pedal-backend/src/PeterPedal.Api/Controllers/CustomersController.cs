@@ -9,7 +9,8 @@ namespace PeterPedal.Api.Controllers;
 
 [ApiController]
 [Route("api/customers")]
-// TODO: Only employees (scope workshop:read) may use this controller, not customers ([Authorize] from Microsoft.AspNetCore.Authorization).
+// TODO: Task 2: who may use this controller? Only employees, not customers.
+// [Authorize(Policy = ...)] with the scope every employee has (Microsoft.AspNetCore.Authorization).
 public class CustomersController : ControllerBase
 {
     private readonly PeterPedalDbContext _db;
@@ -32,7 +33,8 @@ public class CustomersController : ControllerBase
     }
 
     [HttpPost]
-    // TODO: Require the scope customers:write (Scopes.CustomersWrite).
+    // TODO: Task 2: which scope does this need?
+    // Look in the scope table in the README, and use [Authorize(Policy = Scopes....)].
     public async Task<ActionResult<Customer>> Create(Customer customer)
     {
         customer.Id = 0; // the database assigns the id
@@ -42,7 +44,8 @@ public class CustomersController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    // TODO: Require the scope customers:write (Scopes.CustomersWrite).
+    // TODO: Task 2: which scope does this need?
+    // Look in the scope table in the README, and use [Authorize(Policy = Scopes....)].
     public async Task<ActionResult<Customer>> Update(int id, Customer input)
     {
         var customer = await _db.Customers.FindAsync(id);
@@ -58,7 +61,8 @@ public class CustomersController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    // TODO: Only the scope admin:delete (Scopes.AdminDelete) may delete.
+    // TODO: Task 2: which scope does this need?
+    // Look in the scope table in the README, and use [Authorize(Policy = Scopes....)].
     public async Task<IActionResult> Delete(int id)
     {
         var customer = await _db.Customers.FindAsync(id);

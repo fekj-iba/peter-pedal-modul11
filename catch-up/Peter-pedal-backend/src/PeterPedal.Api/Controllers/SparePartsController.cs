@@ -9,7 +9,8 @@ namespace PeterPedal.Api.Controllers;
 
 [ApiController]
 [Route("api/spareparts")]
-// TODO: Only employees (scope workshop:read) may use this controller, not customers ([Authorize] from Microsoft.AspNetCore.Authorization).
+// TODO: Task 2: who may use this controller? Only employees, not customers.
+// [Authorize(Policy = ...)] with the scope every employee has (Microsoft.AspNetCore.Authorization).
 public class SparePartsController : ControllerBase
 {
     private readonly PeterPedalDbContext _db;
@@ -32,7 +33,8 @@ public class SparePartsController : ControllerBase
     }
 
     [HttpPost]
-    // TODO: Require the scope parts:write (Scopes.PartsWrite).
+    // TODO: Task 2: which scope does this need?
+    // Look in the scope table in the README, and use [Authorize(Policy = Scopes....)].
     public async Task<ActionResult<SparePart>> Create(SparePart part)
     {
         part.Id = 0; // the database assigns the id
@@ -42,7 +44,8 @@ public class SparePartsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    // TODO: Require the scope parts:write (Scopes.PartsWrite).
+    // TODO: Task 2: which scope does this need?
+    // Look in the scope table in the README, and use [Authorize(Policy = Scopes....)].
     public async Task<ActionResult<SparePart>> Update(int id, SparePart input)
     {
         var part = await _db.SpareParts.FindAsync(id);
@@ -57,7 +60,8 @@ public class SparePartsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    // TODO: Only the scope admin:delete (Scopes.AdminDelete) may delete.
+    // TODO: Task 2: which scope does this need?
+    // Look in the scope table in the README, and use [Authorize(Policy = Scopes....)].
     public async Task<IActionResult> Delete(int id)
     {
         var part = await _db.SpareParts.FindAsync(id);

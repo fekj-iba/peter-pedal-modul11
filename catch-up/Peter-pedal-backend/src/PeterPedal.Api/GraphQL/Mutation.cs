@@ -11,7 +11,8 @@ namespace PeterPedal.Api.GraphQL;
 // If the case or part does not exist, the method returns null (or false for DeleteCase).
 public class Mutation
 {
-    // TODO: Only the scope cases:create may create cases.
+    // TODO: Task 2: which scope does this need?
+    // Look in the scope table in the README. [Authorize(Policy = ...)] from HotChocolate.Authorization.
     public async Task<RepairCase> CreateCase(int customerId, string frameNumber, string problem,
         [Service] PeterPedalDbContext db)
     {
@@ -22,7 +23,8 @@ public class Mutation
         return repairCase;
     }
 
-    // TODO: Only the scope cases:repair may add parts.
+    // TODO: Task 2: which scope does this need?
+    // Look in the scope table in the README. [Authorize(Policy = ...)] from HotChocolate.Authorization.
     public async Task<RepairCase?> AddPart(int caseId, int partId, [Service] PeterPedalDbContext db)
     {
         var repairCase = await Load(db, caseId);
@@ -39,7 +41,8 @@ public class Mutation
         return repairCase;
     }
 
-    // TODO: Only the scope cases:repair may calculate the offer.
+    // TODO: Task 2: which scope does this need?
+    // Look in the scope table in the README. [Authorize(Policy = ...)] from HotChocolate.Authorization.
     public async Task<RepairCase?> CalculateOffer(int caseId, [Service] PeterPedalDbContext db)
     {
         var repairCase = await Load(db, caseId);
@@ -52,7 +55,8 @@ public class Mutation
         return repairCase;
     }
 
-    // TODO: Only the scope cases:status may set the status.
+    // TODO: Task 2: which scope does this need?
+    // Look in the scope table in the README. [Authorize(Policy = ...)] from HotChocolate.Authorization.
     public async Task<RepairCase?> SetStatus(int caseId, CaseStatus status, [Service] PeterPedalDbContext db)
     {
         var repairCase = await Load(db, caseId);
@@ -65,7 +69,8 @@ public class Mutation
         return repairCase;
     }
 
-    // TODO: Only the scope admin:delete may delete cases.
+    // TODO: Task 2: which scope does this need?
+    // Look in the scope table in the README. [Authorize(Policy = ...)] from HotChocolate.Authorization.
     public async Task<bool> DeleteCase(int caseId, [Service] PeterPedalDbContext db)
     {
         var repairCase = await db.RepairCases.FindAsync(caseId);
