@@ -46,14 +46,35 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // --- Security: who are you (authentication) and what may you do (authorization) ---
-// TODO: Task 2: check the JWT from task 1 (authentication), and add one authorization policy per scope.
-// - builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => ...)
-// - options.TokenValidationParameters = new TokenValidationParameters { ... }: the same issuer, audience
-//   and key as in task 1. An expired token must be rejected at once (look up ClockSkew).
-// - Keep the claim names from the token (look up MapInboundClaims), and say that the user's name is in
-//   the claim "name" (NameClaimType).
-// - builder.Services.AddAuthorization(options => ...): one policy per scope in Scopes.All
-//   (options.AddPolicy) that requires the claim "scope" with that value (RequireClaim).
+// Authentication: every call with "Authorization: Bearer <token>" has its JWT checked by JWT bearer.
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        // Keep the claim names from the token: sub, name, scope. Without this line ASP.NET renames them to long
+        // names (http://schemas.xmlsoap.org/...), and the policies below never find a "scope" claim.
+        options.MapInboundClaims = false;
+        // TODO: Task 2: which checks must a token pass before the API trusts it?
+        // - Made by Peter Pedal and for Peter Pedal: the same issuer and audience as in task 1
+        //   (ValidIssuer, ValidAudience). Read the values from builder.Configuration["Jwt:..."].
+        // - Signed with our key: IssuerSigningKey, the same SymmetricSecurityKey as in task 1.
+        // - Not expired: the lifetime is checked by default, but a token is accepted for 5 more minutes
+        //   after it has expired. Look up ClockSkew.
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            NameClaimType = "name", // the user's name is in the claim "name" (User.Identity.Name, task 6)
+        };
+    });
+
+// Authorization: one policy per scope, named after the scope. [Authorize(Policy = Scopes.PartsWrite)] then
+// requires a "scope" claim with the value "parts:write" in the token.
+builder.Services.AddAuthorization(options =>
+{
+    foreach (var scope in Scopes.All)
+    {
+        options.AddPolicy(scope, policy => policy.RequireClaim("scope", scope));
+    }
+});
 
 // --- Rate limiting: slows down password guessing ---
 // TODO: Task 5: limit login attempts per IP address.
@@ -74,8 +95,8 @@ builder.Services.AddSwaggerGen(options =>
 // --- GraphQL: Query and Mutation classes in GraphQL/, served at /graphql ---
 builder.Services
     .AddGraphQLServer()
-    // TODO: Task 2: GraphQL must use the authorization policies too.
-    // Hot Chocolate needs one extra method call here on the GraphQL server.
+    // Hot Chocolate's [Authorize] (HotChocolate.Authorization) uses the same policies as REST.
+    .AddAuthorization()
     .AddQueryType<Query>()
     .AddMutationType<Mutation>();
 
@@ -96,8 +117,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(FrontendCorsPolicy);
-// TODO: Task 2: turn on authentication and authorization.
-// The order matters: "who are you?" must come before "may you do this?". Both after UseCors.
+// "Who are you?" must come before "may you do this?", and both after UseCors: otherwise 401 and 403 answers
+// lack the CORS header, and the browser shows "Failed to fetch" instead of the status code.
+app.UseAuthentication();
+app.UseAuthorization();
 // TODO: Task 5: turn on rate limiting (after authorization).
 app.MapControllers();
 app.MapGraphQL();

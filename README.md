@@ -108,27 +108,22 @@ ved hvert kald:
   minutter senere.
 - Et kald med et gyldigt token, der mangler det rigtige scope, bliver også afvist, men med en anden statuskode.
 - Både REST og GraphQL er beskyttet. En kunde må ikke se kunderne, reservedelene eller listen over alle sager,
-  men skal stadig kunne spørge efter én sag (`repairCase`). Det kommer du tilbage til i opgave 4.
+  men skal stadig kunne spørge efter én sag (`repairCase`). Det kommer du tilbage til i opgave 3.
 
 **Hints – authentication**
-- Du arbejder i `Program.cs`. Se `// TODO`.
-- ASP.NET har en færdig løsning til JWT: *JWT bearer authentication* (se links). Den skal tjekke præcis samme
-  udsteder, modtager og nøgle, som du brugte, da du lavede tokenet i opgave 1.
-- Hvad der tjekkes, bestemmer du med `TokenValidationParameters`. Som standard godtager ASP.NET et token op til
-  5 minutter efter, det er udløbet, fordi urene på to servere kan gå forskelligt. Find indstillingen, der slår
-  det fra.
-- ASP.NET omdøber som standard claims som `sub` og `scope` til lange navne, og så finder dine policies dem
-  aldrig. Slå `MapInboundClaims` op.
-- Fortæl også ASP.NET, at brugerens navn står i claim'en `name`. Det får du brug for i opgave 6.
-- Authentication og authorization skal begge slås til i pipelinen, og rækkefølgen betyder noget.
+- Opsætningen er der allerede i `Program.cs`: *JWT bearer authentication*, én policy pr. scope, og begge dele
+  slået til i pipelinen. Læs kommentarerne: hvorfor står hver linje der?
+- Du bestemmer, hvad der tjekkes ved et token, med `TokenValidationParameters`. Se `// TODO` i `Program.cs`.
+  Tokenet skal tjekkes mod præcis samme udsteder, modtager og nøgle, som du brugte, da du lavede det i opgave 1.
+- Som standard godtager ASP.NET et token op til 5 minutter efter, det er udløbet, fordi urene på to servere kan
+  gå forskelligt. Find indstillingen, der slår det fra.
 
 **Hints – authorization**
-- Lav én *policy* pr. scope, der kræver en `scope`-claim med netop det scope. Du behøver ikke skrive dem én ad
-  gangen: `Scopes.All` indeholder dem alle.
+- Hver policy har samme navn som sit scope, fx `Scopes.PartsWrite`.
 - REST: sæt `[Authorize]` med den rigtige policy på controllerne og på de handlinger, der ændrer data.
-- GraphQL: Hot Chocolate har sin **egen** `[Authorize]` i `HotChocolate.Authorization`, og GraphQL-serveren skal
-  selv have authorization slået til. ASP.NET's `[Authorize]` på `Query` eller `Mutation` giver ingen fejl, men
-  heller ingen beskyttelse. Lad ikke IDE'en vælge `using` for dig.
+- GraphQL: Hot Chocolate har sin **egen** `[Authorize]` i `HotChocolate.Authorization`. ASP.NET's `[Authorize]`
+  på `Query` eller `Mutation` giver ingen fejl, men heller ingen beskyttelse. Lad ikke IDE'en vælge `using` for
+  dig.
 - Bruger du din egen `SparePartsController.cs` eller `Mutation.cs` fra modul 9, er der ingen `// TODO` i dem.
   Brug scope-tabellen til at finde ud af, hvad hver metode kræver.
 
@@ -137,8 +132,6 @@ ved hvert kald:
 - [Configure JWT bearer authentication](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/configure-jwt-bearer-authentication)
   (Microsoft Learn)
 - [Policy-based authorization](https://learn.microsoft.com/en-us/aspnet/core/security/authorization/policies)
-  (Microsoft Learn)
-- [Middleware-rækkefølge](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/#middleware-order)
   (Microsoft Learn)
 - [Authorization i Hot Chocolate](https://chillicream.com/docs/hotchocolate/v14/security/authorization)
 - [HTTP-statuskoder](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) (MDN)
@@ -151,7 +144,47 @@ nu, og hvad er forskellen? I GraphQL (http://localhost:5080/graphql) sætter du 
 et kald? Log til sidst ind som `lise`: kan hun se kunderne, reservedelene eller listen over alle sager? Kan hun
 stadig spørge efter sin egen sag?
 
-## Opgave 3 – Frontenden
+## Opgave 3 – Authorization på objektniveau (BOLA)
+
+Kunderne kan nu logge ind og få et token. Men et scope siger kun, *hvad* en bruger må gøre, ikke *hvilke data*
+brugeren må se. Lise må gerne spørge efter en sag med `repairCase(id: ...)`, men kun sin egen. Prøv selv, hvad
+der sker nu (API'et skal køre):
+
+    dotnet run --project scripts/PeterPedal.Scripts -- attack
+
+Lise logger ind og spørger efter sag 1, som er Egons. Hvad kan hun se?
+
+Den fejl hedder **BOLA**, *Broken Object Level Authorization*: brugeren er logget ind og må bruge endpointet,
+men API'et tjekker ikke, om netop det objekt (her sagen) er hendes. BOLA er nummer 1 på OWASP's liste over de
+mest alvorlige sikkerhedsfejl i API'er. For at beskytte kundernes data skal API'et tjekke, at sagen tilhører den,
+der spørger.
+
+**Krav**
+- En kunde kan kun læse sine egne sager.
+- Medarbejdere kan stadig læse alle sager.
+- Svaret på en andens sag må ikke afsløre, at sagen findes.
+
+**Hints**
+- Du arbejder i `GraphQL/Query.cs`, i `RepairCase`. Se `// TODO` – der står mere hjælp.
+- Hvorfor kan du ikke løse det med en policy, som i opgave 2? Hvad ved du først, når sagen er hentet fra
+  databasen?
+- `RepairCase` får brugeren som `ClaimsPrincipal user`. Hvordan ser du, om brugeren er medarbejder, og hvilken
+  kunde det er? Tænk på, hvad du lagde i tokenet i opgave 1.
+- Hvad svarer API'et, når du spørger efter en sag, der ikke findes, fx `repairCase(id: 999)`?
+- Tjekket skal ligge i API'et, ikke i frontenden. Angrebsscriptet kalder API'et direkte, uden om siden.
+- `// TODO` nævner også logning. Det kan vente til opgave 6.
+
+**Nyttige links**
+- [OWASP API Security Top 10: API1 Broken Object Level Authorization](https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/)
+- [ClaimsPrincipal](https://learn.microsoft.com/en-us/dotnet/api/system.security.claims.claimsprincipal)
+  (Microsoft Learn)
+
+**Test:** Kør angrebet igen. Hvad ser Lise nu? Log ind som `lise`, og sammenlign i GraphQL svaret på
+`repairCase(id: 1)` og `repairCase(id: 999)`. Er der nogen forskel? Kan hun stadig se sin egen sag 2? Log ind
+som `frida`: kan hun stadig læse både sag 1 og sag 2? Hvorfor er det bedre at svare, som om sagen ikke findes, end
+med en fejlbesked som "Det er ikke din sag"?
+
+## Opgave 4 – Frontenden
 
 Nu hvor API'et kræver login, virker frontenden ikke længere: den sender ikke noget token, så alle kald bliver
 afvist. Prøv selv at åbne http://localhost:5100/sager.html. For at medarbejderne og kunderne kan bruge siderne
@@ -188,45 +221,9 @@ til API'et.
 **Test:** Log ind som `frida` på http://localhost:5100/login.html. Opret en kunde og en reservedel. Hvad sker
 der med reservedelen, og hvorfor? Åbn udviklerværktøjerne (F12), og find tokenet i browserens lager og i et kald
 under Network. Vent 2 minutter, og klik videre. Hvad sker der? Luk fanen, og åbn siden igen. Er du stadig logget
-ind? Log til sidst ind som `lise`. Hvor lander du? Skriv sagsnummer 2.
-
-## Opgave 4 – Authorization på objektniveau
-
-Kunderne kan nu logge ind og følge deres sag. Men et scope siger kun, *hvad* en bruger må gøre, ikke *hvilke
-data* brugeren må se. Lise må gerne spørge efter en sag med `repairCase(id: ...)`, men kun sin egen. Prøv selv,
-hvad der sker nu (API'et skal køre):
-
-    dotnet run --project scripts/PeterPedal.Scripts -- attack
-
-Lise logger ind og spørger efter sag 1, som er Egons. Hvad kan hun se? Prøv det også i browseren: log ind som
-`lise`, og ret adressen fra `min-sag.html?id=2` til `min-sag.html?id=1`.
-
-For at beskytte kundernes data skal API'et tjekke, at sagen tilhører den, der spørger.
-
-**Krav**
-- En kunde kan kun læse sine egne sager.
-- Medarbejdere kan stadig læse alle sager.
-- Svaret på en andens sag må ikke afsløre, at sagen findes.
-
-**Hints**
-- Du arbejder i `GraphQL/Query.cs`, i `RepairCase`. Se `// TODO` – der står mere hjælp.
-- Hvorfor kan du ikke løse det med en policy, som i opgave 2? Hvad ved du først, når sagen er hentet fra
-  databasen?
-- `RepairCase` får brugeren som `ClaimsPrincipal user`. Hvordan ser du, om brugeren er medarbejder, og hvilken
-  kunde det er? Tænk på, hvad du lagde i tokenet i opgave 1.
-- Hvad svarer API'et, når du spørger efter en sag, der ikke findes, fx `repairCase(id: 999)`?
-- Tjekket skal ligge i API'et, ikke i frontenden. Angrebsscriptet kalder API'et direkte, uden om siden.
-- `// TODO` nævner også logning. Det kan vente til opgave 6.
-
-**Nyttige links**
-- [OWASP API Security Top 10: API1 Broken Object Level Authorization](https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/)
-- [ClaimsPrincipal](https://learn.microsoft.com/en-us/dotnet/api/system.security.claims.claimsprincipal)
-  (Microsoft Learn)
-
-**Test:** Kør angrebet igen, og prøv `?id=1` i browseren igen. Hvad ser Lise nu? Sammenlign svaret på
-`repairCase(id: 1)` og `repairCase(id: 999)` som `lise`. Er der nogen forskel? Log ind som `frida`: kan hun
-stadig læse både sag 1 og sag 2? Hvorfor er det bedre at svare, som om sagen ikke findes, end med en fejlbesked
-som "Det er ikke din sag"?
+ind? Log til sidst ind som `lise`. Hvor lander du? Skriv sagsnummer 2, og ret så adressen fra
+`min-sag.html?id=2` til `min-sag.html?id=1`. Hvad ser hun? Siden tjekker ikke selv, hvem sagen tilhører. Hvem
+gør så?
 
 ## Opgave 5 – Rate limiting
 
@@ -286,7 +283,7 @@ hvornår og hvorfra. For at kunne opdage og efterforske angreb skal API'et logge
   allerede en `ILogger`.
 - Afviste kald: i `Program.cs`. Se `// TODO`. JWT bearer har *events*, som ASP.NET kalder, når et kald bliver
   afvist. Der er ét for "ikke logget ind" og ét for "mangler rettigheder".
-- Kundens forsøg: i `GraphQL/Query.cs`, der hvor du afviser sagen i opgave 4. `RepairCase` får allerede en
+- Kundens forsøg: i `GraphQL/Query.cs`, der hvor du afviser sagen i opgave 3. `RepairCase` får allerede en
   `ILogger`.
 - Brug pladsholdere i log-beskeden, fx `{Username}`, i stedet for at sætte teksten sammen selv.
 
@@ -298,6 +295,6 @@ hvornår og hvorfra. For at kunne opdage og efterforske angreb skal API'et logge
 - [HTTP-statuskoder](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) (MDN)
 - [OWASP Logging Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html)
 
-**Test:** Gentag testene fra opgave 1, 2 og 4, og kig i API'ets konsol. Kan du se, hvem der prøvede hvad? Står
+**Test:** Gentag testene fra opgave 1, 2 og 3, og kig i API'ets konsol. Kan du se, hvem der prøvede hvad? Står
 der en adgangskode eller et token nogen steder? Bemærk: når GraphQL afviser et kald (`AUTH_NOT_AUTHORIZED`),
 kommer der ingen linje. Hvorfor ikke?

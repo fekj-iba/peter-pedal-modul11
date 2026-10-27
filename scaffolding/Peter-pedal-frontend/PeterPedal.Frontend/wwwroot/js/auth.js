@@ -2,12 +2,12 @@
 const TOKEN_KEY = 'token';
 
 export function saveToken(token) {
-  // TODO: Task 3: save the token under TOKEN_KEY, so it disappears when the tab is closed.
+  // TODO: Task 4: save the token under TOKEN_KEY, so it disappears when the tab is closed.
   // The browser has two kinds of storage: localStorage and sessionStorage. Which one fits?
 }
 
 export function getToken() {
-  // TODO: Task 3: return the saved token (null if there is none).
+  // TODO: Task 4: return the saved token (null if there is none).
   // Read it from the same storage as in saveToken.
   return null;
 }
@@ -22,6 +22,6 @@ export function readClaims(token) {
 
 // Called when the API says "not logged in" (no token, or it has expired).
 export function goToLogin() {
-  // TODO: Task 3: forget the token, and go to the login page.
+  // TODO: Task 4: forget the token, and go to the login page.
   // Remove it from the storage, and set window.location.href to 'login.html'.
 }

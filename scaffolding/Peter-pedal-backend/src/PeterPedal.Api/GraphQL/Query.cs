@@ -25,7 +25,7 @@ public class Query
     {
         var repairCase = await db.RepairCases.Include(c => c.Customer).Include(c => c.Parts)
             .FirstOrDefaultAsync(c => c.Id == id);
-        // TODO: Task 4: a customer may only read their own case.
+        // TODO: Task 3 (BOLA): a customer may only read their own case.
         // - If no case was found, there is nothing to check.
         // - An employee has the scope workshop:read: user.HasClaim("scope", ...).
         // - A customer has no scopes, but their id is in the claim customer_id: user.FindFirst(...)?.Value.

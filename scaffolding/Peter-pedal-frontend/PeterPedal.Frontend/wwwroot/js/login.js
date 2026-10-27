@@ -14,7 +14,7 @@ function showError(text) {
 
 // Uses fetch directly, not rest.js: here a 401 means "wrong password", not "go to the login page".
 async function login(username, password) {
-  // TODO: Task 3: log in with the API from task 1.
+  // TODO: Task 4: log in with the API from task 1.
   // 1. POST { username, password } as JSON with fetch to `${API_BASE_URL}/api/auth/login`
   //    (method, a Content-Type header and body: JSON.stringify(...)).
   // 2. If it failed (look at response.status), show an error with showError and stop. Remember the
