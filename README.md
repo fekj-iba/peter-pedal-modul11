@@ -19,8 +19,20 @@ Blev du ikke færdig med modul 9, skal du først kopiere indholdet af `catch-up/
    - Windows: åbn `scaffolding` i Stifinder, markér alt, og kopiér det ind i roden af dit repository.
 2. Stop API'et, og slet `Peter-pedal-backend/src/PeterPedal.Api/peterpedal.db`. Databasen bliver kun oprettet,
    når filen ikke findes, og der er nye tabeller og data.
-3. Start API'et og frontenden som i modul 9. I Swagger (http://localhost:5080/swagger) kan du nu se
-   `POST /api/auth/login` og en **Authorize**-knap.
+3. Start API'et og frontenden, hver i sin egen terminal, fra roden af dit repository:
+
+       dotnet run --project Peter-pedal-backend/src/PeterPedal.Api
+       dotnet run --project Peter-pedal-frontend/PeterPedal.Frontend
+
+   API'et kører på http://localhost:5080 og frontenden på http://localhost:5100. I Swagger
+   (http://localhost:5080/swagger) kan du nu se `POST /api/auth/login` og en **Authorize**-knap. Login svarer med
+   fejl 500, indtil du har lavet opgave 1.
+
+   **Genstart API'et efter hver ændring i C#-koden** (Ctrl+C i terminalen, og kør kommandoen igen). Ellers kører
+   den gamle kode stadig. Ændringer i frontenden kræver ingen genstart: genindlæs siden i browseren med
+   Ctrl+Shift+R, så browseren ikke bruger en gammel udgave af JavaScript-filerne.
+
+   Scriptene `attack` (opgave 3) og `guess` (opgave 5) kører du i en tredje terminal, mens API'et kører.
 
 ### Brugere
 
